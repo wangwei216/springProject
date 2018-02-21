@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!--
+    1. 先配置被代理的对象（TestService）
+    2. 然后配置前置通知对象（MyMethodBeforeAdvice）
+    3. 配置代理对象（这个是重点）
+        1.
+        2.
+        3.
+
+    -->
+    <!--先配置被代理的对象-->
+    <bean id="testService" class="spring_testAopProxy.TestService">
+        <property name="name" value="王伟"></property>
+    </bean>
+
+    <!--配置前置通知对象-->
+    <bean id="myMethodBeforeAdvice" class="spring_testAopProxy.MyMethodBeforeAdvice"></bean>
+
+    <!--配置代理对象，这部分由spring来实现,配置的这个ProxyFactoryBean是spring自带的-->
+    <bean id="proxyFactoryBean" class="org.springframework.aop.framework.ProxyFactoryBean">
+
+        <!--配置代理的接口集-->
+        <property name="proxyInterfaces">
+            <list>
+                <value>spring_testAopProxy.TestServiceInterface</value>
+                <value>spring_testAopProxy.TestServiceInterface2</value>
+            </list>
+        </property>
+
+        <!--通知各个接口 把通知植入到代理对象U-->
+      <property name="interceptorNames">
+          <!--相当于包MyMethodBeforeAdvice前置通知和代理对象关联在一起，也可以把通知看成是一个拦截器-->
+          <value>myMethodBeforeAdvice</value>
+      </property>
+        <!--代理那些对象，这个是可以指定的-->
+        <property name="target" ref="testService"/>
+
+        
+    </bean>
+
+    
+    
+
+</beans>

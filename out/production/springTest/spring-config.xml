@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+<!--
+        2. id就是当你用的时候需要用到的这个，也就是唯一标识符
+        1. class就是你需要的用到的那个类名，在property下配置的是你需要配置的那个类的属性名，后面value是值（你所定义的那个那个类必须有空构造器存在）
+-->
+    <!--<bean id="helloSpring" class="spring_test01.HelloSpring">-->
+            <!--<property name="name" value="我是王俊伟"></property>-->
+    <!--</bean>-->
+
+    <bean id="car" class="spring_test01.Car">
+        <!--如果要是你设置的属性中有特殊的字符的话就需要用下面的【CDATA【这个里面加上你需要的字符】}】-->
+        <constructor-arg  type="java.lang.String">
+            <value><![CDATA[AODI##￥]]></value>
+        </constructor-arg>
+        <constructor-arg  type="java.lang.String">
+            <value>CHINA</value>
+        </constructor-arg>
+     <constructor-arg type="int" value="200"></constructor-arg>
+
+    </bean>
+
+
+    
+    <bean id="person" class="spring_test01.Person">
+
+        <property name="name" value="wangwei"></property>
+        <property name="age" value="99"></property>
+
+        <property name="car">
+           <!-- <ref bean="car"></ref>-->
+            <!--内部bean 不允许被外部引用，只能在内部使用-->
+            <bean id="car" class="spring_test01.Car">
+                <constructor-arg value="JAC"></constructor-arg>
+                <constructor-arg value="ENGLISH"></constructor-arg>
+                <constructor-arg value="10000" type="int"></constructor-arg>
+
+            </bean>
+        </property>
+    </bean>
+
+<!--这部分是配置map类型的属性的-->
+    <bean id="person2" class="spring_test02.Person">
+        <constructor-arg index="0" value="xiaoming"/>
+        <constructor-arg index="1" value="33"/>
+        <constructor-arg index="2">
+            <map>
+                <entry key="AA" value-ref="car"></entry>
+                <entry key="BB" value-ref="car"></entry>
+            </map>
+        </constructor-arg>
+
+    </bean>
+    
+    <!--也是测试map集合的boy类-->
+    <bean id="boy" class="spring_test02.Boy">
+        <property name="hobbies">
+            <list>
+                <value type="java.lang.String">打篮球</value>
+                <value type="java.lang.String">打羽毛球</value>
+                <value type="java.lang.String">打网球</value>
+
+            </list>
+        </property>
+    </bean>
+
+    <!--这个是配置一些数据库之类需要用到的连接 这都是配置一些properties的属性 关于数据库连接需要用到的 -->
+    <bean id="dateSourse" class="spring_test02.DateSourse">
+        <constructor-arg>
+            <props>
+                <prop key="user">wangwei</prop>
+                <prop key="passWord">wang5872256</prop>
+                <prop key="jdbcURL">jdbc:mySQL;/</prop>
+                <prop key="driver">http://driver</prop>
+            </props>
+        </constructor-arg>
+    </bean>
+
+
+    <!--
+                一、 使用bean的scope属性来配置bean的作用域
+                    1. 当scope的值为“prototype“的时候， 原型的 容器初始化时不创建bean的实例，而在每次请求时都创建一个新的bean实例，并返回
+                    2. 当scope的值为“singleton”的时候， 默认值，容器初始时创建bean实例，在整个容器的生命周期中只创建一个bean  单例的
+    -->
+    <bean id="car" class="spring_testScope.Car" scope="prototype">
+        <property name="brand" value="wangwei"></property>
+        <property name="price" value="80000"></property>
+
+    </bean>
+
+
+
+</beans>
