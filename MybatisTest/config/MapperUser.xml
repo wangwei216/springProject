@@ -6,7 +6,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离 
 注意：使用mapper代理方法开发，namespace有特殊重要的作用
 -->
-<mapper namespace="test">
+<!--如果你想使用mapper代理的话，这个命名空间就需要是你要实现的哪个接口(也就是你要代理的接口)地址（包名）-->
+<mapper namespace="MybatisTest.UserMapper">
 
 	<!-- 在 映射文件中配置很多sql语句 -->
 	<!-- 需求：通过id查询用户表的记录 -->
@@ -14,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	id：标识 映射文件中的 sql
 	将sql语句封装到mappedStatement对象中，所以将id称为statement的id
 	parameterType：指定输入 参数的类型，这里指定int型 
-	#{}表示一个占位符号+
+	#{}表示一个占位符号
 	#{id}：其中的id表示接收输入 的参数，参数名称就是id，如果输入 参数是简单类型，#{}中的参数名可以任意，可以value或其它名称
 	
 	resultType：指定sql输出结果 的所映射的java对象类型，select指定resultType表示将单条记录映射成的java对象。
@@ -62,12 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		其次在insert执行时，从user对象中取出id属性值
 		 &ndash;&gt;
 		&lt;!&ndash;  <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
-			SELECT uuid()
-		</selectKey>
-		insert into user(id,username,birthday,sex,address) value(#{id},#{username},#{birthday},#{sex},#{address}) &ndash;&gt;
-		
-		
-	</insert>-->
+		-->
 	
 	<!-- 删除 用户
 	1. 需要写配置文件

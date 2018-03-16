@@ -29,7 +29,7 @@ public class MybatisFirst {
         SqlSession sqlSession = sqlSessionFactory.openSession();
        // *//*通过SqlSession操作数据库
        /* 第一个参数就是映射文件中的statement的id，也就是命名空间（namespace）.statement的id*/
-        User user = sqlSession.selectOne("test.findUserById", "1");
+        User user = sqlSession.selectOne("test.findUserById", 1);
         System.out.println(user);
         //释放会话资源
         sqlSession.close();
@@ -48,7 +48,7 @@ public class MybatisFirst {
         //这一步为SQL语句进行传参，
         // 第一个参数也就是数据库实体类的配置文件中(namespace.配置的功能方法id在实体类配置文件中的)
         //第二个参数就是你sql语句中需要注入的关键字
-        List<User> list = sqlSession.selectList("test.findUserByName", "王");
+        List<User> list = sqlSession.selectList("test.findUserByName","王伟");
         System.out.println(list);
         sqlSession.close();
 
@@ -67,10 +67,10 @@ public class MybatisFirst {
 
         */
         User user = new User();
-        user.setId(8);
-        user.setName("王伟");
-        user.setPassword("wang5872256");
-        user.setEmail("1111111111@.com");
+        user.setId(7);
+        user.setName("肖辉");
+        user.setPassword("999999");
+        user.setEmail("99999999@.com");
         //把你要插入的数据都先用set方法写好，然后直接把整个对象给插入进去
         sqlSession.insert("test.insertUser",user);
         //提交事务
@@ -78,7 +78,50 @@ public class MybatisFirst {
         //关闭资源
         sqlSession.close();
     }
+    /*
+        通过id来删除数据库的数据
+    */
+    @Test
+    public void deleteUserByIdTest() throws IOException {
+
+        String resource = "SqlMapConfig.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        //得到SQLsession
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        //然后用sqlSession去调用操作数据的方法,然后还需要考虑返回值
+        // 这个第一个参数的意思就是和之前配置的xml文件建立一个联系,使用的是xml的命名空间.配置的方法id
+        //第二个参数你SQL语句中需要传进来的值
+        sqlSession.delete("test.deleteUser",2);
+        sqlSession.commit();
+        sqlSession.close();
+
+    }
+
+    /*
+    通过用户id来更新user对象的方法
+    */
+    @Test
+    public  void updateUserByIdTest() throws IOException {
+
+        String resource = "SqlMapConfig.xml";
+        InputStream resourceAsStream = Resources.getResourceAsStream(resource);
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(resourceAsStream);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        //因为在update配置文件中用的parameterType类型是User(数据库实体类)
+        User user = new User();
+        user.setId(2);
+        user.setName("葛豪2");
+        user.setPassword("666666666");
+        user.setEmail("163QQ.com2");
+        sqlSession.update("test.updateUser",user);
+        //提交事务
+        sqlSession.commit();
+        sqlSession.close();
 
 
+    }
 
 }
