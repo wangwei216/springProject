@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--
+    一、在Spring中进行AOP配置
+        1. 先配置核心bean类对象
+        2. 再去配置切面的bean类对象（这个切面对象意思就是你前置通知或者后置通知等等 你要在核心方法前后打印出来的内容）
+        2. 配置AOP使用<aop:config>
+            1）然后配置切点<aop:pointcut expression后面跟的是你要执行的类的方法
+            2）再去配置切面<aop:aspect 而ref的值就是切面的bean类
+                a. 在配置切面的节点下面 配置你需要的前置通知或者其他 如：<aop:before method的值就是你在切面中写好的前置通知或者其他类型通知的方法名
+
+    补充：在切面后面可以使用order可以指定优先级，数字越小优先级越高
+    -->
+
+    <!--配置bean-->
+    <bean id="arithmethicCalculator" class="spring_testAnnotationDemo.ArithmethicCalculatorImpl" abstract="false"></bean>
+    <!--配置切面的bean-->
+    <bean id="LoggingAspect" class="spring_testAnnotationDemo.LoggingAspect"></bean>
+
+    <!--配置AOP-->
+    <aop:config>
+        <!--然后在这个里面进行配置切点表达式,切点就是你要在那个执行的核心方法-->
+        <aop:pointcut id="pointcut" expression="execution(*spring_testAnnotationDemo.ArithmethicCalculator.*(int,int)"/>
+
+        <!--配置切面及通知，这个切面就是指你要输出的日志、前置通知后置通知之类的 这样的一个类，然后在设置是用的是前置通知还是后置通知或者是环绕通知-->
+        <aop:aspect ref="LoggingAspect" order="2">
+            <aop:before method="beforeMethod" pointcut-ref="pointcut"/>
+        </aop:aspect>
+    </aop:config>
+</beans>

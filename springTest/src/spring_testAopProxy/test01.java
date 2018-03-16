@@ -13,13 +13,18 @@ public static void main(String[] args){
     //而且返回的类型也不是TestService 类型的，而是TestService要实现的接口类的TestServiceInterface类型
     TestServiceInterface2 testServiceInterface = (TestServiceInterface2) context.getBean("proxyFactoryBean");
     TestServiceInterface testServiceInterface2 = (TestServiceInterface) context.getBean("proxyFactoryBean");
+//    MyAfterReturningAdvice bean = context.getBean(MyAfterReturningAdvice.class);
+
+    //创建一个环绕通知功能的类, 这个功能我再重新写一个测试的主函数
+
 
     testService.sayHello();
     System.out.println("======================");
     testServiceInterface2.sayHello();
     System.out.println("======================");
 
-    testServiceInterface.sayBye();
+//    testServiceInterface.sayBye();
+
 
 
     }
