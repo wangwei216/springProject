@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--使用注解之前必须要先使用context:component-scan去让注解能够被扫描的到-->
+    <!--使用《context》标签的属性resource-pattern 可以指定扫描某一个具体包下的类或者指定的类，这样就不会去扫描别的类-->
+    <context:component-scan base-package="spring_testAnnotation"
+                            use-default-filters="false"
+    resource-pattern="repository.class">
+        <!--使用exclude-filter这个可以指定排除那些表达式的组件-->
+        <!--使用 <context:include-filter，是是定包含哪些表达式的组件，但是需要配合 use-default-filters来使用，并将其false改成true-->
+        <!--<context:exclude-filter type="annotation" expression="spring_testAopProxy.这个地方跟的是MVC哪个层次包下的路径的类"></context:exclude-filter>-->
+        <!--<context:include-filter type="annotation" expression="spring_testAnnotation这个地方跟包的路径"></context:include-filter>-->
+    </context:component-scan>
+
+
+</beans>

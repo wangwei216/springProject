@@ -4,12 +4,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!--
-    1. 先配置被代理的对象（TestService）
-    2. 然后配置前置通知对象（MyMethodBeforeAdvice）
-    3. 配置代理对象（这个是重点）
-        1.
-        2.
-        3.
+一、如何实现一个AOP的面向切面编程(使用代理实现前置通知、后置通知、环绕通知、异常通知)？
+  （1）定义接口
+  （2）编写对象并且实现接口（也就是被代理的对象或者说是目标对象）
+  （3）开始xml文件的配置操作
+    1. 先配置被代理的对象（这个被代理的对象也就是你实现你的功能接口的那个对象，就是谁实现接口就代理谁）
+    2. 然后配置前置通知对象、后置通知对象、环绕通知对象、异常通知对象（MyMethodBeforeAdvice）
+    3. 配置代理对象（这个是重点proxyFactoryBean，而且这个proxyFactoryBean是spring提供的类直接用就行）
+        3.1 配置代理接口集（也就是你要实现的接口的功能）
+        3.2 织入代理（也就是你实现的如：环绕通知、前置通知、后置通知的id《这个id是你在xml文件中配置好的》）
+        3.3 配置被代理对象（这个被代理的对象也就是你实现你的功能接口的那个对象）
 
     -->
     <!--先配置被代理的对象-->
@@ -17,24 +21,41 @@
         <property name="name" value="王伟"></property>
     </bean>
 
-    <!--配置前置通知对象-->
+    <!--配置前置通知对象(这个就相当于new一个对象)-->
     <bean id="myMethodBeforeAdvice" class="spring_testAopProxy.MyMethodBeforeAdvice"></bean>
+    <!--配置后置通知对象-->
+    <bean id="myAfterReturningAdvice" class="spring_testAopProxy.MyAfterReturningAdvice"></bean>
+    <!--这个配置的是环绕通知对象-->
+   <bean id="myMethodInterceptor" class="spring_testAopProxy.MyMethodInterceptor"></bean>
+    <!--这个配置的是异常通知对象-->
+    <!--<bean id="myThrowsAdvice" class="spring_testAopProxy.MyThrowsAdvice"></bean>-->
 
     <!--配置代理对象，这部分由spring来实现,配置的这个ProxyFactoryBean是spring自带的-->
     <bean id="proxyFactoryBean" class="org.springframework.aop.framework.ProxyFactoryBean">
 
-        <!--配置代理的接口集-->
+
+        <!--配置代理的接口集，这个也就相当于以后你要在哪个功能的函数前后座日志的输出之类的-->
         <property name="proxyInterfaces">
             <list>
                 <value>spring_testAopProxy.TestServiceInterface</value>
                 <value>spring_testAopProxy.TestServiceInterface2</value>
+                <!--这个是配置环绕通知的类名，把这个想象成在一个spring大的bean工厂中配置一个我们需要的环绕通知功能的属性,下面不需要写，
+                意思就是说这个地方配置的就是你要实现的接口的功能，而不是你实现环绕通知的那个类名-->
+                <!--<value>spring_testAopProxy.MyMethodInterceptor</value>-->
             </list>
         </property>
 
-        <!--通知各个接口 把通知植入到代理对象U-->
+        <!--通知各个接口 把通知织入到代理对象U-->
       <property name="interceptorNames">
           <!--相当于包MyMethodBeforeAdvice前置通知和代理对象关联在一起，也可以把通知看成是一个拦截器-->
-          <value>myMethodBeforeAdvice</value>
+          <list>
+              <!--这个是前置通知和后置通知-->
+              <value>myMethodBeforeAdvice</value>
+              <value>myAfterReturningAdvice</value>
+              <!--这个就相当于在spring大工厂中配置一个bean和那个功能的环绕功能类关联起来，也就是配置他的id，然后织入给这个大的springbean大工工厂中-->
+              <value>myMethodInterceptor</value>
+              <!--<value>myThrowsAdvice</value>-->
+          </list>
       </property>
         <!--代理那些对象，这个是可以指定的-->
         <property name="target" ref="testService"/>
