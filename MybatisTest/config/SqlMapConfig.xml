@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	<!-- 加载 的映射文件 -->
 	<mappers>
 
-		<mapper resource="testMybatis/MapperUser.xml"/>
+		<mapper resource="mapper/MapperUser.xml"/>
 		<mapper class="testMybatisDao.UserMapper"/>
 		<!--<mapper resource="/mapper/MapperUser.xml"/>-->
 

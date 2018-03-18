@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+    <!--
+
+   总结：
+    一、如何使用mapper代理的方式去实现一个操作数据库功能的步骤
+        1. 首先你要有一个mybatis的全局xml配置文件(这个文件主要是连接数据库的)，
+           然后还要有你代理的哪个mapper的xml路径(路径包括src下的包名/xml文件名)
+        2. 你还要建立一个代理哪个的 xml文件这个xml的文件要有namespace(可以随便命名，但是最好是包名+ )
+        3. 在含有命名空间的那个xml文件中写SQL语句
+            1),返回值类型(要考虑是否需要使用pojo来进行对查询条件进行包装)
+            2),传入的参数类型
+            3),注意这个id就是你要实现的功能接口的名字(这里就是映射把你要实现的接口类给映射进来)
+
+
+
+    -->
+
+
+    <!-- 加载属性文件 -->
+    <properties resource="db.properties">
+        <!--properties中还可以配置一些属性名和属性值  -->
+        <!-- <property name="jdbc.driver" value=""/> -->
+    </properties>
+    <!-- 全局配置参数，需要时再设置 -->
+    <!-- <settings>
+
+    </settings> -->
+
+    <!-- 别名定义 -->
+    <typeAliases>
+
+        <!-- 针对单个别名定义
+        type：类型的路径
+        alias：别名
+         -->
+        <!-- <typeAlias type="cn.itcast.mybatis.po.User" alias="user"/> -->
+        <!-- 批量别名定义
+        指定包名，mybatis自动扫描包中的po类，自动定义别名，别名就是类名（首字母大写或小写都可以）
+        -->
+        <package name="helloMybatis_po"/>
+
+    </typeAliases>
+
+    <!-- 和spring整合后 environments配置将废除-->
+    <environments default="development">
+        <environment id="development">
+            <!-- 使用jdbc事务管理，事务控制由mybatis-->
+            <transactionManager type="JDBC" />
+            <!-- 数据库连接池，由mybatis管理-->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}" />
+                <property name="url" value="${jdbc.url}" />
+                <property name="username" value="${jdbc.username}" />
+                <property name="password" value="${jdbc.password}" />
+            </dataSource>
+        </environment>
+    </environments>
+    <!-- 加载 的映射文件，也就是把你需要加载的xml文件加载到mybatis的全局配置文件中去 -->
+    <mappers>
+
+        <!--在写需要代理的xml文件(里面是select，方法的那个)的时候包名含有. 的要换成/-->
+        <mapper resource="beans/user.mapper.xml"/>
+        <!--通过resource方法一次加载一个映射文件 -->
+        <!-- <mapper resource="mapper/UserMapper.xml"/> -->
+
+        <!-- 通过mapper接口加载单个 映射文件
+        遵循一些规范：需要将mapper接口类名和mapper.xml映射文件名称保持一致，且在一个目录 中
+        上边规范的前提是：使用的是mapper代理方法
+         -->
+        <!-- <mapper class="cn.itcast.mybatis.mapper.UserMapper"/> -->
+
+        <!-- 批量加载mapper
+        指定mapper接口的包名，my	batis自动扫描包下边所有mapper接口进行加载
+        遵循一些规范：需要将mapper接口类名和mapper.xml映射文件名称保持一致，且在一个目录 中
+        上边规范的前提是：使用的是mapper代理方法
+         -->
+
+
+    </mappers>
+
+
+
+</configuration>
