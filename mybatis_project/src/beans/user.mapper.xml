@@ -7,11 +7,19 @@
 注意：使用mapper代理方法开发，namespace有特殊重要的作用
 -->
 
-<!--如果你想使用mapper代理的话，这个命名空间就需要是你要实现的哪个接口(也就是你要代理的接口)
-这个命名规范就是地址（包名）,通过这个命名空间来找到唯一的方法id(需要映射的那个)-->
+<!--如果你想使用mapper代理的话，这个命名空间就需要是你要实现的哪个接口(也就是你要代理的接口)，为了防止sql的id重名
+这个命名规范就是那个实体类的（包名）+ 实体类的类名来命名的,或者是实体类的包名+xml的类名-->
 <mapper namespace="UserMapper">
 
 
+    <!--查询所有用户的信息，用RowBounds来实现-->
+    <select id="getAllRowBounds" resultType="User">
+        SELECT *FROM user
+    </select>
+    <!--查询所有的用户信息，用map分页实现-->
+    <select id="getAllMap" resultType="User" parameterType="Map">
+        SELECT * FROM user limit #{startIndex},#{pageSize}
+    </select>
     <!--这个是查询到所有用户信息的集合-->
     <select id="selectAllUser" resultType="beans.User">
         SELECT * FROM user
@@ -26,9 +34,15 @@
         DELETE FROM user WHERE id = #{id}
     </delete>
     <!--这个是通过id来得到用户信息的功能-->
-    <select id="selectUser" resultType="beans.User" parameterType="int">
-        select * from user WHERE id = #{id};
+    <select id="selectUser" resultMap="User" >
+        select id,name,password,email from user WHERE id = #{id};
     </select>
+        <resultMap id="User" type="User">
+            <id column="id" property="id"/>
+            <result column="name" property="name"/>
+            <result column="password" property="password"/>
+            <result column="email" property="email"/>
+        </resultMap>
     <!--这个实现的是插入用户-->
     <!--parameterType因为你要插入的是用户的所有信息，也就是User类型-->
     <!--useGeneratedKeys这个是如果你插入的用户信息，是不是要使用主键自增-->

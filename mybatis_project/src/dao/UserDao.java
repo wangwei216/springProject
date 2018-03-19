@@ -1,11 +1,14 @@
 package dao;
 
 import beans.User;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import util.MybatisUtil;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UserDao {
 
@@ -52,6 +55,26 @@ public class UserDao {
         sqlSession.close();
         return list;
     }
-
+    //这个是实现分页查询功能（用map来实现的第一种方式）
+    public List<User> getAll(int currentPage,int pageSize) throws IOException {
+        SqlSession  sqlSession = MybatisUtil.getSession();
+        Map<String,Integer> map = new HashMap<String, Integer>();
+//这个是把当
+        map.put("startIndex",(currentPage-1)*pageSize);
+        map.put("pageSize",pageSize);
+        List<User> list = sqlSession.selectList("UserMapper.getAllMap",map);
+        sqlSession.close();
+        return list;
+    }
+    //这个是通过RowBounds来实现查询功能的分页操作
+    public List<User> getAllRowBounds(int currentPage,int pageSize) throws IOException {
+        SqlSession sqlSession = MybatisUtil.getSession();
+        /*rowBounds需要的第一个参数就是从数据的哪个下标开始开始查，第二个就是你需要查询的条数*/
+        RowBounds rowBounds= new RowBounds((currentPage-1)*pageSize,pageSize);
+        List<User> list = sqlSession.selectList("UserMapper.getAllRowBounds",
+                null, rowBounds);
+        sqlSession.close();
+        return list;
+    }
 
 }

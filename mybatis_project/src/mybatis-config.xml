@@ -10,14 +10,29 @@
    总结：
     一、如何使用mapper代理的方式去实现一个操作数据库功能的步骤
         1. 首先你要有一个mybatis的全局xml配置文件(这个文件主要是连接数据库的)，
-           然后还要有你代理的哪个mapper的xml路径(路径包括src下的包名/xml文件名)
+           然后还要有你代理的哪个mapper的xml路径(路径包括src下的包名/xml文件名，不要用 .)
         2. 你还要建立一个代理哪个的 xml文件这个xml的文件要有namespace(可以随便命名，但是最好是包名+ )
-        3. 在含有命名空间的那个xml文件中写SQL语句
+        3. 在含有命名空间的那个xml文件中写SQL语句(就是映射SQL语句)
             1),返回值类型(要考虑是否需要使用pojo来进行对查询条件进行包装)
             2),传入的参数类型
             3),注意这个id就是你要实现的功能接口的名字(这里就是映射把你要实现的接口类给映射进来)
 
+    二、如果出现在SQL语句中出现的字段名和你定义的实体类的属性名不一致时：
+        (1)第一个解决办法就是把不一致的按个字段名设置成和跟数据库的实体类的字段名一致，不然无法进行映射
 
+
+        (2)可以自己定义一个ResultMap的结果集进行重新映射SQL语句
+    三、如何使用Mybatis来实现分页功能的两种方法
+        1. 使用Map来进行包装数据
+            1),在SQL语句映射的ResultType返回的是你要查询得到的实体类
+            2),穿进去的参数parameterType是你自己包装的Map类型
+            3),首先你传进来的参数要和SQL语句中的字段名要保持一致
+            4),在实体DAO层还需要把查询数据的起始下标，和查询多少条数据都put进Map中
+        2. 使用RowBounds来实现分页
+            1),只需要设置一个返回值为User实体类型
+            2),RowBounds rowBounds= new RowBounds((currentPage-1)*pageSize,pageSize);
+            3),就是上一步多了一个创建一个RowBounds对象，然后需要传入SQL语句中需要的参数就行了
+            4),然后sqlSession在执行selectList的时候把那个rowBounds对象直接传进去就可以了
 
     -->
 
@@ -39,12 +54,13 @@
         type：类型的路径
         alias：别名
          -->
+        <typeAlias type="beans.User" alias="User"/>
+
         <!-- <typeAlias type="cn.itcast.mybatis.po.User" alias="user"/> -->
         <!-- 批量别名定义
         指定包名，mybatis自动扫描包中的po类，自动定义别名，别名就是类名（首字母大写或小写都可以）
         -->
-        <package name="helloMybatis_po"/>
-
+        <package name="beans"/>
     </typeAliases>
 
     <!-- 和spring整合后 environments配置将废除-->
@@ -64,7 +80,7 @@
     <!-- 加载 的映射文件，也就是把你需要加载的xml文件加载到mybatis的全局配置文件中去 -->
     <mappers>
 
-        <!--在写需要代理的xml文件(里面是select，方法的那个)的时候包名含有. 的要换成/-->
+        <!--在写需要代理的xml文件(里面是select，方法的那个)的时候包名含有. -->
         <mapper resource="beans/user.mapper.xml"/>
         <!--通过resource方法一次加载一个映射文件 -->
         <!-- <mapper resource="mapper/UserMapper.xml"/> -->
