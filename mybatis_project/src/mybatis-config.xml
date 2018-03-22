@@ -34,6 +34,28 @@
             3),就是上一步多了一个创建一个RowBounds对象，然后需要传入SQL语句中需要的参数就行了
             4),然后sqlSession在执行selectList的时候把那个rowBounds对象直接传进去就可以了
 
+    四、如何使用面向接口的注解的动态代理的方式去实现增删改查功能
+        1. 首先要先创建一个接口类
+            1),写一个接口
+            2),然后上面使用注解的方式把SQL语句写进去
+        2. 然后直接在全局的xml配置文件下的mapper下把那个接口的类给关联进去
+        3. 在测试功能的时候就比较麻烦了点
+            1),先得到SQLsession对象
+            2),在通过SQLsession对象去得到那个要实现功能的接口的mapper对象 返回的是那个接口类型
+            3),在用那个接口类型的mapper对象去调用接口的那个方法就可以了
+
+    五、如何实现SQL中的多对一的处理方式
+        1.
+
+
+    六、如何实现SQL中的一对多的处理方式
+        1.
+
+
+
+
+    总结：
+        1. 其实就是谁对谁就是在谁的实体类中去
     -->
 
 
@@ -82,6 +104,14 @@
 
         <!--在写需要代理的xml文件(里面是select，方法的那个)的时候包名含有. -->
         <mapper resource="beans/user.mapper.xml"/>
+        <mapper class="dao.UserDaoIntface"/>
+
+        <!--这个是一对多的按结果嵌套来映射的-->
+        <mapper resource="beans/student.mapper.xml"/>
+
+        <!--这个是一对多的按查询结果来映射的,如果按正规的就应该分开来写，一个bean一个mapper对应的xml-->
+        <mapper resource="beans/teacher.mapper.xml"/>
+
         <!--通过resource方法一次加载一个映射文件 -->
         <!-- <mapper resource="mapper/UserMapper.xml"/> -->
 

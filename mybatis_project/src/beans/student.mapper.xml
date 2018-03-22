@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离
+注意：使用mapper代理方法开发，namespace有特殊重要的作用
+-->
+
+<!--如果你想使用mapper代理的话，这个命名空间就需要是你要实现的哪个接口(也就是你要代理的接口)，为了防止sql的id重名
+这个命名规范就是那个实体类的（包名）+ 实体类的类名来命名的,或者是实体类的包名+xml的类名-->
+<mapper namespace="StudentMapper">
+
+<!--
+            对于多对一的处理方式有两种
+                1. 安结果嵌套处理
+                2. 安结果查询处理
+
+    安结果级嵌套-->
+<!--
+  <select id="getStudent" resultMap="StudentTeacher">
+        SELECT s.id sid , s.name sname ,s.tid stid , t.id tid, t.name tname
+                  FROM student s ,teacher t  WHERE  s.tid=t.id
+    </select>
+        &lt;!&ndash;这个id就是能找到是你哪个SQL语句的resultType的值，而type就是你最终想得到的结果的映射类型&ndash;&gt;
+        <resultMap id="StudentTeacher" type="Student">
+            &lt;!&ndash;这个id就是自己定义的列名&ndash;&gt;
+            <id     column="sid" property="id"/>
+            <result column="sname" property="name"/>
+            &lt;!&ndash;关联对象&ndash;&gt;
+            <association property="teacher" javaType="Teacher">
+                <id     column="tid" property="id"/>
+                <result column="tname" property="name"/>
+            </association>
+        </resultMap>-->
+
+    <!--这个是按查询的嵌套进行处理的-->
+    <select id="getStudent" resultMap="StudentTeacher">
+        SELECT * FROM user
+    </select>
+    <resultMap id="StudentTeacher" type="Student">
+        <!--然后这个关联的是另外一个查询另一张的teacher的表，也就是说需要建两个mapper的SQL语句的xml文件-->
+        <association property="teacher" column="tid"
+                     javaType="Teacher" select="TeacherMapper.getTeacher">
+        </association>
+    </resultMap>
+    <!--这个就是查询另一张teacher的表的映射SQL-->
+    <!--<select id="getTeacher" resultType="Teacher">
+        SELECT * FROM teacher WHERE id = #{id}
+    </select>-->
+
+
+</mapper>
+
+
