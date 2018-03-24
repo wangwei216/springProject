@@ -36,7 +36,7 @@
 
     <!--这个是按查询的嵌套进行处理的-->
     <select id="getStudent" resultMap="StudentTeacher">
-        SELECT * FROM user
+        SELECT * FROM student
     </select>
     <resultMap id="StudentTeacher" type="Student">
         <!--然后这个关联的是另外一个查询另一张的teacher的表，也就是说需要建两个mapper的SQL语句的xml文件-->
@@ -44,11 +44,13 @@
                      javaType="Teacher" select="TeacherMapper.getTeacher">
         </association>
     </resultMap>
-    <!--这个就是查询另一张teacher的表的映射SQL-->
-    <!--<select id="getTeacher" resultType="Teacher">
-        SELECT * FROM teacher WHERE id = #{id}
-    </select>-->
 
+   <!--
+    这个就是查询另一张teacher的表的映射SQL
+    <select id="getTeacher" resultType="Teacher">
+        SELECT * FROM teacher WHERE id = #{id}
+    </select>
+-->
 
 </mapper>
 
