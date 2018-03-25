@@ -1,0 +1,22 @@
+
+
+
+    总结：
+        一、如何整合Spring和Mybatis的思路分析(整合的是原生的Dao)；
+            1.需要先配置Mybatis的全局配置文件(在此之前需要先把工程结构搭建好)
+            2.需要配置spring的全局配置文件
+            3.然后配置mybatis的mapper的SQL映射配置文件，并把这个xml文件路径加载到Mybatis的全局配置文件中
+            4.创建对应数据库的实体类bean
+            5.实现Dao层要实现的功能接口（是增删改查的那种接口）
+            6.如果需要使用的是原生的Dao，就需要去写一个实现Dao接口的实现类(这里需要继承SqlSessionDaoSupport来得到sqlsession工厂)
+            7.最后是使用Junit测试(使用的时候需要先构建属性applicationContext来把spring的全局配置文件加载进来用ClassPathXmlApplicationContext方法)
+
+        二、如何整合Spring和Mybatis的思路分析(使用的是面向接口的mapper代理，不用再去写Dao的实现类)
+            1.需要先配置Mybatis的全局配置文件(在此之前需要先把工程结构搭建好)
+            2.需要配置spring的全局配置文件
+            3.然后配置mybatis的mapper的SQL映射配置文件，并把这个xml文件路径加载到Mybatis的全局配置文件中
+            4.创建对应数据库的实体类bean
+            5.这里是直接创建一个UserMapper的接口(因为没有了接口的实现类，所以现在需要去创建一个专门实现UserMapper中接口的功能，也就是映射SQL)
+            6.然后这里使用的是mapper代理的方式，所以在用的时候需要先从spring中得到一个UserMapper对象，再通过这个UserMapper对象去调用映射SQL语句的功能id
+            7.最后是使用Junit测试(使用的时候需要先构建属性applicationContext来把spring的全局配置文件加载进来用ClassPathXmlApplicationContext方法)
+

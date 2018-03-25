@@ -29,17 +29,28 @@
 
 
 	<!--这个是先把sqlSessionFactory给配置到spring容器中-->
-	<bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 				<!--加载mybatis的配置文件-->
 		<property name="configLocation" value="mybatis/SqlMapConfig.xml"/>
 
 		<!--加载mybatis的配置文件-->
-		<property name="dataSource" ref=""/>
+		<property name="dataSource" ref="dataSource"/>
 
 	</bean>
 
+	<!--这里是配置原始的Dao的-->
+	<bean id="userDao" class="cn.itcast.ssm.dao.UserDaoImpl">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
 
+	</bean>
 
+	<!--这里是使用mapper代理的方式把UserMapper对象交给spring来管理（里面都是接口）,这里类路径是jar包中固定的-->
+		<!--这个id的userMapper名字，因为当你在想要执行那个接口要实现的功能的时候，你还需要去用userMapper来去调用里面的一堆功能接口-->
+	<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<!--这个就需要你去调用指定哪个mapper对象类的里面的接口-->
+		<property name="mapperInterface" value="cn.itcast.ssm.mapper.UserMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+	</bean>
 
 
 
