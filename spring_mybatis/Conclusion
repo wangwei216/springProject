@@ -20,3 +20,17 @@
             6.然后这里使用的是mapper代理的方式，所以在用的时候需要先从spring中得到一个UserMapper对象，再通过这个UserMapper对象去调用映射SQL语句的功能id
             7.最后是使用Junit测试(使用的时候需要先构建属性applicationContext来把spring的全局配置文件加载进来用ClassPathXmlApplicationContext方法)
 
+        三、如何整合spring和Mybatis的思路分析(这个是使用mapper的批量扫描，从mapper中扫描出接口)
+            1.因为如果你不用mapper的批量扫描mapper中的接口的话，如果有根多个mapper接口，你就要分别取创建SQL语句的映射id，会很麻烦
+            2.但是当你用了mapper批量扫描去扫描接口的话，就回自动生成代理对象并且在spring容器中去管理
+            3.而且用的时候需要遵循以下规范遵循规范：才能自动创建代理对象
+              将mapper.java和mapper.xml映射文件名称保持一致，且在一个目录 中
+              自动扫描出来的mapper的bean的id为mapper类名（首字母小写）
+            4.然后你需要在这个里面bean的id(也就是你的借口类)，还需要导入spring和mybatis的整合包MapperFactoryBean
+            5.还需要加属性也就是你的包名basePackage，value就是你要实现代理的按个mapper文件(里面都是借口)
+              还需要加的属性名就是sqlSessionFactoryBeanName而不是sqlSessionFactory，但是值是sqlSessionFactory，因为如果要是
+
+        四、如何使用逆向工程来自动生成相对应的mapper类中的接口和自动生成的SQL的xml语句
+            1.但是在用的时候需要先创建一个项目为了安全起见在烤过来
+            2.就是说这样可以大大减轻了程序员写SQL语句的工作量
+
