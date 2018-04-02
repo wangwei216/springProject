@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离
+注意：使用mapper代理方法开发，namespace有特殊重要的作用
+-->
+
+<!--如果你想使用mapper代理的话，这个命名空间就需要是你要实现的哪个接口(也就是你要代理的接口)，为了防止sql的id重名
+这个命名规范就是那个实体类的（包名）+ 实体类的类名来命名的,或者是实体类的包名+xml的类名-->
+<mapper namespace="TeacherMapper">
+
+    <!--这个是多对一的那一小部分部分，为了保证那个一对多的正确执行，先把这个故意改错-->
+    <select id="getTeacher01" resultType="Teacher">
+        SELECT * FROM teacher WHERE id = #{id}
+    </select>
+
+    <!--这里是一对多查询的mapper的xml文件-->
+    <select id="getTeacher" resultMap="TeacherStudent">
+        SELECT s.id sid , s.name sname ,s.tid stid , t.id tid, t.name tname
+                  FROM student s ,teacher t  WHERE  s.tid=t.id AND t.id=#{id}
+    </select>
+    <!--这里就开始写结果集部分-->
+    <resultMap id="TeacherStudent" type="Teacher">
+        <!--这个id的column是你要映射到SQL语句中的，这个property是你从真实的beans实体类的属性中的id-->
+        <id column="tid" property="id"/>
+        <result column="tname" property="name"/>
+        <!--因为这个地方的是一对多，要关联到的是一个集合所以使用collection-->
+        <collection property="students" ofType="Student">
+            <id column="sid" property="id"/>
+            <result column="sname" property="name"/>
+        </collection>
+    </resultMap>
+
+
+</mapper>
+
+

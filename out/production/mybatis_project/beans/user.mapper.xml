@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace命名空间，作用就是对sql进行分类化管理，理解sql隔离
+注意：使用mapper代理方法开发，namespace有特殊重要的作用
+-->
+
+<!--如果你想使用mapper代理的话，这个命名空间就需要是你要实现的哪个接口(也就是你要代理的接口)，为了防止sql的id重名
+这个命名规范就是那个实体类的（包名）+ 实体类的类名来命名的,或者是实体类的包名+xml的类名-->
+<mapper namespace="UserMapper">
+
+
+    <!--查询所有用户的信息，用RowBounds来实现-->
+    <select id="getAllRowBounds" resultType="User">
+        SELECT *FROM user
+    </select>
+    <!--查询所有的用户信息，用map分页实现-->
+    <select id="getAllMap" resultType="User" parameterType="Map">
+        SELECT * FROM user limit #{startIndex},#{pageSize}
+    </select>
+    <!--这个是查询到所有用户信息的集合-->
+    <select id="selectAllUser" resultType="beans.User">
+        SELECT * FROM user
+    </select>
+    <!--这个是通过用户的id来修改用户的信息-->
+    <update id="updateUser" parameterType="beans.User">
+        UPDATE user SET name=#{name},password=#{password},email=#{email} WHERE id =#{id}
+    </update>
+
+    <!--这个是通过id来删除用户信息-->
+    <delete id="deleteUser" parameterType="int">
+        DELETE FROM user WHERE id = #{id}
+    </delete>
+    <!--这个是通过id来得到用户信息的功能-->
+    <select id="selectUser" resultMap="User" >
+        select id,name,password,email from user WHERE id = #{id};
+    </select>
+        <resultMap id="User" type="User">
+            <id column="id" property="id"/>
+            <result column="name" property="name"/>
+            <result column="password" property="password"/>
+            <result column="email" property="email"/>
+        </resultMap>
+    <!--这个实现的是插入用户-->
+    <!--parameterType因为你要插入的是用户的所有信息，也就是User类型-->
+    <!--useGeneratedKeys这个是如果你插入的用户信息，是不是要使用主键自增-->
+    <!--在插入数据的时候尽量要跟数据库中的字段名保持一致，而且在插入的时候需要用commit来提交事务-->
+    <insert id="addUser" parameterType="beans.User" useGeneratedKeys="true">
+        INSERT INTO user (id ,name, password, email) VALUE (#{id},#{name},#{password},#{email})
+    </insert>
+    <!-- 在 映射文件中配置很多sql语句 -->
+    <!-- 需求：通过id查询用户表的记录 -->
+    <!-- 通过 select执行数据库查询
+    id：标识 映射文件中的 sql
+    将sql语句封装到mappedStatement对象中，所以将id称为statement的id
+    parameterType：指定输入 参数的类型，这里指定int型
+    #{}表示一个占位符号
+    #{id}：其中的id表示接收输入 的参数，参数名称就是id，如果输入 参数是简单类型，#{}中的参数名可以任意，可以value或其它名称
+
+    resultType：指定sql输出结果 的所映射的java对象类型，select指定resultType表示将单条记录映射成的java对象。
+     -->
+
+
+</mapper>
+
+

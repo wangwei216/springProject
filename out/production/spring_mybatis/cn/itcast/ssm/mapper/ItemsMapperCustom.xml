@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.itcast.ssm.mapper.ItemsMapperCustom" >
+
+	<!--这个下班部分的SQL语句片段，然后这里需要有id，便于引入-->
+		<sql id="query_items_where">
+			<!--到这里的话需要用动态的SQL语句进行判断，先判断最终包装那个全程传递参数的那个po是不是为空-->
+			<if test="itemsCustom!=null">
+				<!--然后再去通过这个包装的对象去调属性来判断我sql语句中的需要传的参数是不是为空-->
+				<if test="itemsCustom.name!=null and itemsCustom.name!=''">
+					items.name LIKE '%${itemsCustom.name}%'
+				</if>
+			</if>
+			 items.name LIKE '%笔记%'
+		</sql>
+
+	<!--这个是查询商品列表的SQL语句的映射-->
+	<select id="findItemsList" resultType="cn.itcast.ssm.po.ItemsCustom"
+			parameterType="cn.itcast.ssm.po.ItemsQueryVo">
+		  SELECT * FROM items
+		<!--写到这里就需要用到SQL语句片段-->
+		  <where>
+				  <include refid="query_items_where"></include>
+		  </where>
+
+	</select>
+
+
+
+   <!--&lt;!&ndash; 定义商品查询的sql片段，就是商品查询条件 &ndash;&gt;
+   <sql id="query_items_where">
+   	&lt;!&ndash; 使用动态sql，通过if判断，满足条件进行sql拼接 &ndash;&gt;
+   	&lt;!&ndash; 商品查询条件通过ItemsQueryVo包装对象 中itemsCustom属性传递 &ndash;&gt;
+   		<if test="itemsCustom!=null">
+   			<if test="itemsCustom.name!=null and itemsCustom.name!=''">
+   				items.name LIKE '%${itemsCustom.name}%'
+   			</if>
+   		</if>
+	
+   </sql>
+  	
+  	&lt;!&ndash; 商品列表查询 &ndash;&gt;
+  	&lt;!&ndash; parameterType传入包装对象(包装了查询条件)
+  		resultType建议使用扩展对象
+  	 &ndash;&gt;
+  	<select id="findItemsList" parameterType="cn.itcast.ssm.po.ItemsQueryVo"
+  		 resultType="cn.itcast.ssm.po.ItemsCustom">
+  		SELECT items.* FROM items  
+  		<where>
+  			<include refid="query_items_where"></include>
+  		</where>
+  	</select>-->
+  	
+</mapper>

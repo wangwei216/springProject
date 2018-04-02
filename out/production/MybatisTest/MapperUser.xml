@@ -7,8 +7,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 注意：使用mapper代理方法开发，namespace有特殊重要的作用
 -->
 <!--如果你想使用mapper代理的话，这个命名空间就需要是你要实现的哪个接口(也就是你要代理的接口)地址（包名）-->
-<mapper namespace="MybatisTest.UserMapper">
+<mapper namespace="test">
 
+
+
+
+	<!--这个是测试用pojo来包装实现的-->
+	<!--这个resultType-->
+	<select id="findUserList" resultType="pojo.UserCustom" parameterType=" pojo.UserQueryVo">
+
+		SELECT * FROM user WHERE user.password=#{UserCustom .password} AND user.name LIKE '%${UserCustom.username}%';
+
+	</select>
 	<!-- 在 映射文件中配置很多sql语句 -->
 	<!-- 需求：通过id查询用户表的记录 -->
 	<!-- 通过 select执行数据库查询
